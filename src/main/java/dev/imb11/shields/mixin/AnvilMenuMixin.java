@@ -27,9 +27,15 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
     @Shadow @Nullable private String itemName;
 
-    protected AnvilMenuMixin(@Nullable MenuType<?> type, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+    //? if <1.21.2 {
+    /*protected AnvilMenuMixin(@Nullable MenuType<?> type, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
         super(type, containerId, playerInventory, access);
     }
+    *///?} else {
+    public AnvilMenuMixin(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, ContainerLevelAccess access, ItemCombinerMenuSlotDefinition slotDefinition) {
+        super(menuType, containerId, inventory, access, slotDefinition);
+    }
+    //?}
 
     /**
      * Credits to <a href="https://github.com/hiisuuii/infinicore/blob/master/src%2Fmain%2Fjava%2Fhisui%2Finfinicore%2Fmixin%2FInfinicoreMixin.java#L27">Infinicore's Implementation of Anvil Recipes</a>

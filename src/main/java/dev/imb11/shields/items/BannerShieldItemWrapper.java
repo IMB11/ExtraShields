@@ -1,7 +1,7 @@
 package dev.imb11.shields.items;
 
 import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricBannerShieldItem;
-import dev.imb11.shields.datagen.providers.ShieldsEnchantmentProvider;
+import dev.imb11.shields.enchantments.ShieldsEnchantmentKeys;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -21,24 +21,38 @@ public class BannerShieldItemWrapper extends FabricBannerShieldItem {
         super(settings, coolDownTicks, enchantability, repairItemTag);
     }
 
-    @Override
+
+    //? if <1.21.2 {
+    /*@Override
     public int getCoolDownTicks() {
+    *///?} else {
+    @Override
+    public int getCoolDownTicks(@Nullable ItemStack itemStack) {
+    //?}
+
+        int superValue = 0;
+        //? if <1.21.2 {
+        /*superValue = super.getCoolDownTicks();
+         *///?} else {
+        superValue = super.getCoolDownTicks(itemStack);
+        //?}
+
         // Check for bracing enchantment, each level decreases cooldown ticks by 10%.
         if (MIXIN$ITEM_STACK_VALUE != null && ENCHANTMENT_LOOKUP != null) {
-            var enchantment = ENCHANTMENT_LOOKUP.getOrThrow(ShieldsEnchantmentProvider.BRACING);
+            var enchantment = ENCHANTMENT_LOOKUP.getOrThrow(ShieldsEnchantmentKeys.BRACING);
             int enchantmentLevel = MIXIN$ITEM_STACK_VALUE.getEnchantments().getLevel(enchantment);
 
             if (enchantmentLevel > 0) {
                 MIXIN$ITEM_STACK_VALUE = null;
                 ENCHANTMENT_LOOKUP = null;
 
-                return (int) (super.getCoolDownTicks() * (1 - (0.1 * enchantmentLevel)));
+                return (int) (superValue * (1 - (0.1 * enchantmentLevel)));
             }
 
             MIXIN$ITEM_STACK_VALUE = null;
             ENCHANTMENT_LOOKUP = null;
         }
 
-        return super.getCoolDownTicks();
+        return superValue;
     }
 }

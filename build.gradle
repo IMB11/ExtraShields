@@ -58,10 +58,14 @@ dependencies {
     modImplementation include("com.github.Chocohead:Fabric-ASM:v2.3")
 }
 
-fabricApi {
-    configureDataGeneration() {
-        client = true
-        modId = "shields"
+if (stonecutter.eval(stonecutter.current.version, ">=1.21.3")) {
+    fabricApi {
+        configureDataGeneration() {
+            client = true
+            modId = "shields"
+            createSourceSet = true
+            outputDirectory = project.getRootDir().toPath().resolve("src/main/generated").toFile()
+        }
     }
 }
 

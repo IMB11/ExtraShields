@@ -14,20 +14,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "d": {
-      "item": "minecraft:diamond"
-    },
-    "w": {
-      "tag": "minecraft:planks"
-    }
+    "c": "minecraft:copper_ingot",
+    "h": "minecraft:honeycomb",
+    "w": "#minecraft:planks"
   },
   "pattern": [
-    "wdw",
-    "www",
+    "wcw",
+    "whw",
     " w "
   ],
   "result": {
     "count": 1,
-    "id": "shields:diamond_shield"
+    "id": "shields:copper_shield"
   }
 }

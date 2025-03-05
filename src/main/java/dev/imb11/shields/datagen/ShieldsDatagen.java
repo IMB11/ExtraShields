@@ -1,3 +1,4 @@
+//? if >1.21.3 {
 package dev.imb11.shields.datagen;
 
 import dev.imb11.shields.datagen.providers.*;
@@ -22,3 +23,4 @@ public class ShieldsDatagen implements DataGeneratorEntrypoint {
         return "shields";
     }
 }
+//?}

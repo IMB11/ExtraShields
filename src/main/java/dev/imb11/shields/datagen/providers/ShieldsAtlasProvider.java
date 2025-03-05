@@ -1,3 +1,4 @@
+//? if >1.21.3 {
 package dev.imb11.shields.datagen.providers;
 
 import dev.imb11.shields.client.ShieldsClient;
@@ -27,3 +28,4 @@ public class ShieldsAtlasProvider extends FabricCodecDataProvider<ShieldsAtlas> 
         return "Extra Shields Atlas";
     }
 }
+//?}

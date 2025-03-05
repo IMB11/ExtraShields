@@ -1,6 +1,6 @@
 package dev.imb11.shields.enchantments;
 
-import dev.imb11.shields.datagen.providers.ShieldsEnchantmentProvider;
+import dev.imb11.shields.Shields;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -21,15 +21,15 @@ import net.minecraft.world.phys.Vec3;
 public class ShieldsEnchantmentEffects {
     public static InteractionResult eventShieldBlock(LivingEntity livingEntity, DamageSource damageSource, float amount, InteractionHand interactionHand, ItemStack shield) {
         if (shield.isEnchanted()) {
-            var enchantmentRegistry = livingEntity.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+            var enchantmentRegistry = Shields.Util.getRegistry(livingEntity.level().registryAccess(), Registries.ENCHANTMENT);
 
             // Check for our enchantments.
-            int evokeringLevel = EnchantmentHelper.getItemEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(ShieldsEnchantmentProvider.EVOKERING), shield);
+            int evokeringLevel = EnchantmentHelper.getItemEnchantmentLevel(Shields.Util.getHolderFromRegistry(enchantmentRegistry, ShieldsEnchantmentKeys.EVOKERING), shield);
             if (evokeringLevel > 0 && damageSource.getEntity() instanceof LivingEntity attackerEntity) {
                 Handlers.handleEvokering((ServerLevel) livingEntity.level(), evokeringLevel, attackerEntity, livingEntity);
             }
 
-            int lifeboundLevel = EnchantmentHelper.getItemEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(ShieldsEnchantmentProvider.LIFEBOUND), shield);
+            int lifeboundLevel = EnchantmentHelper.getItemEnchantmentLevel(Shields.Util.getHolderFromRegistry(enchantmentRegistry, ShieldsEnchantmentKeys.LIFEBOUND), shield);
             if (lifeboundLevel > 0 && damageSource.getEntity() instanceof LivingEntity attackerEntity) {
                 Handlers.handleLifebound(lifeboundLevel, (Player) livingEntity, attackerEntity);
             }
@@ -40,14 +40,14 @@ public class ShieldsEnchantmentEffects {
 
     public static InteractionResult eventShieldDisabled(Player player, InteractionHand interactionHand, ItemStack shield) {
         if (shield.isEnchanted()) {
-            var enchantmentRegistry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+            var enchantmentRegistry = Shields.Util.getRegistry(player.level().registryAccess(), Registries.ENCHANTMENT);
 
-            int launchingLevel = EnchantmentHelper.getItemEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(ShieldsEnchantmentProvider.LAUNCHING), shield);
+            int launchingLevel = EnchantmentHelper.getItemEnchantmentLevel(Shields.Util.getHolderFromRegistry(enchantmentRegistry, ShieldsEnchantmentKeys.LAUNCHING), shield);
             if (launchingLevel > 0) {
                 Handlers.handleLaunching(launchingLevel, player, shield);
             }
 
-            int momentumLevel = EnchantmentHelper.getItemEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(ShieldsEnchantmentProvider.MOMENTUM), shield);
+            int momentumLevel = EnchantmentHelper.getItemEnchantmentLevel(Shields.Util.getHolderFromRegistry(enchantmentRegistry, ShieldsEnchantmentKeys.MOMENTUM), shield);
             if (momentumLevel > 0) {
                 Handlers.handleMomentum(momentumLevel, player, shield);
             }
@@ -70,7 +70,8 @@ public class ShieldsEnchantmentEffects {
             player.heal(damage);
 
             var registryLookup = player.level().registryAccess();
-            var magicDamageSouce = new DamageSource(registryLookup.registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.MAGIC));
+            var damageTypeRegistry = Shields.Util.getRegistry(registryLookup, Registries.DAMAGE_TYPE);
+            var magicDamageSouce = new DamageSource(Shields.Util.getHolderFromRegistry(damageTypeRegistry, DamageTypes.MAGIC));
             attacker.setLastHurtByPlayer(player);
             attacker.hurt(magicDamageSouce, damage);
         }

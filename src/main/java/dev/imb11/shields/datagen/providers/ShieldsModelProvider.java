@@ -1,14 +1,15 @@
+//? if >1.21.3 {
 package dev.imb11.shields.datagen.providers;
 
 import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricBannerShieldItem;
 import com.google.gson.Gson;
 import dev.imb11.shields.items.ShieldsItems;
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
@@ -20,7 +21,7 @@ public class ShieldsModelProvider extends FabricModelProvider {
     private static final TextureSlot SHIELD_TEXTURE_SLOT = TextureSlot.create("shield");
 
     private static final ModelTemplate SHIELD_BLOCKING_MODEL_TEMPLATE = new ModelTemplate(
-            Optional.of(ResourceLocation.tryParse("fabricshieldlib:item/fabric_banner_shield_blocking")),
+            Optional.ofNullable(ResourceLocation.tryParse("fabricshieldlib:item/fabric_banner_shield_blocking")),
             Optional.empty(),
             SHIELD_TEXTURE_SLOT
     );
@@ -46,10 +47,10 @@ public class ShieldsModelProvider extends FabricModelProvider {
             SHIELD_BLOCKING_MODEL_TEMPLATE.create(
                     ModelLocationUtils.getModelLocation(shieldItem, "_blocking"),
                     textureMapping,
-                    itemModelGenerators.output
+                    itemModelGenerators.modelOutput
             );
 
-            itemModelGenerators.output.accept(
+            itemModelGenerators.modelOutput.accept(
                     ModelLocationUtils.getModelLocation(shieldItem),
                     () -> gson.toJsonTree(createShieldModelJson(shieldName))
             );
@@ -75,3 +76,4 @@ public class ShieldsModelProvider extends FabricModelProvider {
         );
     }
 }
+//?}

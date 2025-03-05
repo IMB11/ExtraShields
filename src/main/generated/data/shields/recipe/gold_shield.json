@@ -14,23 +14,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "c": {
-      "item": "minecraft:copper_ingot"
-    },
-    "h": {
-      "item": "minecraft:honeycomb"
-    },
-    "w": {
-      "tag": "minecraft:planks"
-    }
+    "g": "minecraft:gold_ingot",
+    "w": "#minecraft:planks"
   },
   "pattern": [
-    "wcw",
-    "whw",
+    "wgw",
+    "www",
     " w "
   ],
   "result": {
     "count": 1,
-    "id": "shields:copper_shield"
+    "id": "shields:gold_shield"
   }
 }

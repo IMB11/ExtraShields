@@ -1,3 +1,4 @@
+//? if >1.21.1 {
 package dev.imb11.shields.datagen.providers;
 
 import dev.imb11.shields.items.ShieldsItems;
@@ -34,3 +35,4 @@ public class ShieldsItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addAll(shieldKeys);
     }
 }
+//?}

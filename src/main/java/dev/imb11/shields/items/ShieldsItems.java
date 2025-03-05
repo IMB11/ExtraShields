@@ -2,12 +2,13 @@ package dev.imb11.shields.items;
 
 import dev.imb11.shields.Shields;
 import dev.imb11.shields.client.ShieldsClient;
-import dev.imb11.shields.datagen.providers.ShieldsEnchantmentProvider;
+import dev.imb11.shields.enchantments.ShieldsEnchantmentKeys;
 import dev.imb11.shields.items.custom.ShieldPatchKitItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
@@ -109,19 +110,27 @@ public class ShieldsItems {
                 .displayItems((itemDisplayParameters, output) -> {
                     var enchantmentStacks = new ArrayList<ItemStack>();
                     itemDisplayParameters.holders().lookup(Registries.ENCHANTMENT).ifPresent(enchantments -> {
-                        for (ResourceKey<Enchantment> registeredEnchantment : ShieldsEnchantmentProvider.REGISTERED_ENCHANTMENTS) {
+                        for (ResourceKey<Enchantment> registeredEnchantment : ShieldsEnchantmentKeys.REGISTERED_ENCHANTMENTS) {
                             var reference = enchantments.getOrThrow(registeredEnchantment);
                             IntStream.rangeClosed(
                                     reference.value().getMinLevel(),
                                     reference.value().getMaxLevel()
                             ).mapToObj(level ->
-                                    EnchantedBookItem.createForEnchantment(new EnchantmentInstance(reference, level))
+                                    //? if <1.21.2 {
+                                    /*EnchantedBookItem.createForEnchantment(new net.minecraft.world.item.enchantment.EnchantmentInstance(reference, level))
+                                    *///?} else {
+                                    {
+                                        var stack = Items.ENCHANTED_BOOK.getDefaultInstance().copy();
+                                        var enchantmentData = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+                                        enchantmentData.set(reference, level);
+                                        stack.set(DataComponents.STORED_ENCHANTMENTS, enchantmentData.toImmutable());
+                                        return stack;
+                                    }
+                                    //?}
                             ).forEach(enchantmentStacks::add);
                         }
                     });
 
-                    // Output in rows of material.
-                    // Fill gap with enchantments.
                     output.accept(Items.SHIELD);
                     output.accept(SHIELD_PLATING);
                     output.accept(PLATED_SHIELD);
@@ -170,7 +179,12 @@ public class ShieldsItems {
     }
 
     private static BannerShieldItemWrapper create(String id, int durability, int blockingDelay, TagKey<Item> repairItems) {
-        var item = register(id, (settings) -> new BannerShieldItemWrapper(settings.durability(durability), blockingDelay, 9, repairItems));
+        var item = register(id, (settings) -> new BannerShieldItemWrapper(
+                settings.durability(durability),
+                blockingDelay,
+                9,
+                repairItems
+        ));
 
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             ShieldsClient.registerDynamicShield(id, item);
@@ -182,6 +196,11 @@ public class ShieldsItems {
     private static <T extends Item> T register(String id, Function<Item.Properties, T> builder) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ResourceLocation.tryBuild("shields", id));
 
-        return Registry.register(BuiltInRegistries.ITEM, key, builder.apply(new Item.Properties()));
+        return Registry.register(BuiltInRegistries.ITEM, key, builder.apply(
+                new Item.Properties()
+                //? if >1.21.2 {
+                        .setId(key)
+                //?}
+        ));
     }
 }

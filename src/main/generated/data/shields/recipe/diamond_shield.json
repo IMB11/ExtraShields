@@ -14,20 +14,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "g": {
-      "item": "minecraft:gold_ingot"
-    },
-    "w": {
-      "tag": "minecraft:planks"
-    }
+    "d": "minecraft:diamond",
+    "w": "#minecraft:planks"
   },
   "pattern": [
-    "wgw",
+    "wdw",
     "www",
     " w "
   ],
   "result": {
     "count": 1,
-    "id": "shields:gold_shield"
+    "id": "shields:diamond_shield"
   }
 }
